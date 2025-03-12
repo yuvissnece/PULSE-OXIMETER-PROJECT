@@ -1,0 +1,18 @@
+BPM,Health_Status,Name,SpO2,Timestamp
+129,Emergency,Jimmy,91.3,2025-03-08 17:19:49
+114,Emergency,Jimmy,86.2,2025-03-08 17:19:49
+64,Emergency,Jimmy,86.1,2025-03-08 17:19:49
+74,Warning,Jimmy,91.7,2025-03-08 17:19:49
+102,Warning,Jimmy,97.4,2025-03-08 17:19:49
+75,Normal,Jimmy,97.5,2025-03-08 17:19:49
+113,Emergency,Jimmy,89.5,2025-03-08 17:19:49
+121,Emergency,Jimmy,98.6,2025-03-08 17:19:49
+81,Warning,Jimmy,94.8,2025-03-08 17:19:49
+91,Normal,Jimmy,96.6,2025-03-08 17:19:49
+125,Emergency,Jimmy,97.5,2025-03-08 17:48:14
+119,Emergency,Jimmy,88.2,2025-03-08 17:48:14
+130,Emergency,Jimmy,89.6,2025-03-08 17:48:14
+107,Warning,Jimmy,99.2,2025-03-08 17:48:14
+124,Emergency,Jimmy,87.0,2025-03-08 17:48:14
+116,Warning,Jimmy,94.5,2025-03-08 17:48:14
+109,Emergency,Jimmy,89.9,2025-03-08 17:48:14
