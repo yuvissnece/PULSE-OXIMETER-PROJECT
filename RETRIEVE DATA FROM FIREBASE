@@ -2,18 +2,14 @@ import firebase_admin
 from firebase_admin import credentials, db
 import pandas as pd
 
-
-
-
-# Load your service account key JSON file
 cred = credentials.Certificate("pulse oximeter.json")
 firebase_admin.initialize_app(cred, {"databaseURL": "https://pulse-oximeter-5f4cd-default-rtdb.firebaseio.com/"})
 
-# Set your Firebase data path (Change based on your database structure)
+
 ref = db.reference("health_data")  # Update this based on your actual data path
 data = ref.get()
 
-# Convert Firebase JSON data to CSV
+
 df = pd.DataFrame.from_dict(data, orient="index")
 df.to_csv("firebase_data.csv", index=False)
 
