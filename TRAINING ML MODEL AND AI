@@ -1,0 +1,103 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+import pickle
+
+# Load the dataset
+file_path = "firebase_data.csv"  # Update this if needed
+df = pd.read_csv(file_path)
+
+
+
+
+
+# Plot histograms for numerical features
+df.hist(figsize=(10, 6), bins=20, edgecolor='black')
+plt.suptitle("Feature Distribution", fontsize=16)
+plt.show()
+
+# Plot count plot for the target variable (Assuming the target column is 'health_status')
+plt.figure(figsize=(6, 4))
+sns.countplot(x=df['Health_Status'])
+plt.title("Target Variable Distribution")
+plt.xlabel("Health Status")
+plt.ylabel("Count")
+plt.show()
+
+
+# Drop rows with missing values
+df.dropna(inplace=True)
+
+encoder = LabelEncoder()
+df['Name'] = encoder.fit_transform(df['Name'])
+
+df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+
+# Convert to Unix timestamp (seconds since 1970)
+df['Timestamp'] = df['Timestamp'].astype(int) / 10**9
+
+# Encode categorical target variable (Assuming 'health_status' is the target)
+label_encoder = LabelEncoder()
+df['Health_Status'] = label_encoder.fit_transform(df['Health_Status'])
+
+# Select features and target
+X = df.drop(columns=['Health_Status'])  # Features
+y = df['Health_Status']  # Target
+
+# Normalize numerical features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Split into training and testing sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+print("Training size:", X_train.shape)
+print("Testing size:", X_test.shape)
+
+print("Data preprocessing complete. Ready for model training!")
+
+
+
+# Initialize the model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+# Train the model
+model.fit(X_train, y_train)
+
+print("Model training complete! 🎉")
+
+
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy * 100:.2f}%")
+
+
+
+# Save the trained model
+with open("health_model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+print("Model saved successfully! 🎯")
+
+with open("health_model.pkl", "rb") as f:
+    loaded_model = pickle.load(f)
+
+predictions = loaded_model.predict(X_test)
+print(predictions)
+
+label_mapping = {0: "Healthy", 1: "Moderate", 2: "Critical"}  # Example mapping
+converted_predictions = [label_mapping[num] for num in [0, 0, 2, 0]]
+print(converted_predictions)
+
+
+
+
+
