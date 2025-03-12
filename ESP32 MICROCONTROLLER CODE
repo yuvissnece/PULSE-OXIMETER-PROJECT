@@ -1,0 +1,48 @@
+#include <WiFi.h>
+#include <FirebaseESP32.h>
+
+#define WIFI_SSID "ABC"      
+#define WIFI_PASSWORD "ABC" 
+
+#define FIREBASE_HOST "https://console.firebase.google.com/u/0/project/pulse-oximeter-5f4cd/database/pulse-oximeter-5f4cd-default-rtdb/data/~2" 
+#define FIREBASE_AUTH "1:345383240132:web:d78793ea38c6f8a0406491" 
+FirebaseData fbdo;
+FirebaseAuth auth;
+FirebaseConfig config;
+
+void setup() {
+    Serial.begin(115200);
+
+    // 🔹 Connect to WiFi
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.print("Connecting to WiFi...");
+    while (WiFi.status() != WL_CONNECTED) {
+        Serial.print(".");
+        delay(500);
+    }
+    Serial.println("\n✅ Connected to WiFi");
+
+    // 🔹 Initialize Firebase
+    config.host = FIREBASE_HOST;
+    config.signer.tokens.legacy_token = FIREBASE_AUTH;
+    Firebase.begin(&config, &auth);
+    Firebase.reconnectWiFi(true);
+}
+
+void loop() {
+    
+    float spo2 = random(95, 100);
+    float bpm = random(60, 100);  
+
+    Serial.print("🔹 SpO2: ");
+    Serial.print(spo2);
+    Serial.print("%  |  BPM: ");
+    Serial.println(bpm);
+
+    // 🔹 Send Simulated Data to Firebase
+    Firebase.setFloat(fbdo, "/PulseOximeter/SpO2", spo2);
+    Firebase.setFloat(fbdo, "/PulseOximeter/BPM", bpm);
+    Serial.println("✅ Simulated Data Sent to Firebase");
+
+    delay(2000); // Wait 2 seconds before sending data again
+}
