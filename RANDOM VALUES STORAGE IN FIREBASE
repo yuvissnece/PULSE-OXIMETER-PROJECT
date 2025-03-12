@@ -1,0 +1,51 @@
+import firebase_admin
+from firebase_admin import credentials, db
+import pandas as pd
+import random
+from tabulate import tabulate
+import datetime
+
+
+cred = credentials.Certificate("pulse oximeter.json")  
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://pulse-oximeter-5f4cd-default-rtdb.firebaseio.com/'  
+})
+
+
+def classify_health(spo2, bpm):
+    if spo2 >= 95 and 60 <= bpm <= 100:
+        return "Normal"
+    elif spo2 < 90 or bpm < 50 or bpm > 120:
+        return "Emergency"
+    else:
+        return "Warning"
+
+
+def generate_data(n=5):
+    data = []
+    for _ in range(n):
+        spo2 = round(random.uniform(85, 100), 1)  
+        bpm = random.randint(60, 130)  
+        health_status = classify_health(spo2, bpm)
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data.append({'Name':'Jimmy',"SpO2": spo2, "BPM": bpm, "Health_Status": health_status, "Timestamp": timestamp})
+    return pd.DataFrame(data)
+
+
+def upload_to_firebase(df):
+    ref = db.reference("health_data")  
+    for _, row in df.iterrows():
+        ref.push({
+            'Name':row['Name'],
+            "SpO2": row["SpO2"],
+            "BPM": row["BPM"],
+            "Health_Status": row["Health_Status"],
+            "Timestamp": row["Timestamp"]
+        })
+
+
+df = generate_data(10)  
+print(tabulate(df, headers="keys", tablefmt="grid"))  
+
+upload_to_firebase(df)  
+print("Data successfully stored in Firebase!")
