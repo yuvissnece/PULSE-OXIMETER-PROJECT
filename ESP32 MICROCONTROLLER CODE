@@ -13,16 +13,16 @@ FirebaseConfig config;
 void setup() {
     Serial.begin(115200);
 
-    // 🔹 Connect to WiFi
+   
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to WiFi...");
     while (WiFi.status() != WL_CONNECTED) {
         Serial.print(".");
         delay(500);
     }
-    Serial.println("\n✅ Connected to WiFi");
+    Serial.println("\n Connected to WiFi");
 
-    // 🔹 Initialize Firebase
+    
     config.host = FIREBASE_HOST;
     config.signer.tokens.legacy_token = FIREBASE_AUTH;
     Firebase.begin(&config, &auth);
@@ -34,15 +34,15 @@ void loop() {
     float spo2 = random(95, 100);
     float bpm = random(60, 100);  
 
-    Serial.print("🔹 SpO2: ");
+    Serial.print(" SpO2: ");
     Serial.print(spo2);
     Serial.print("%  |  BPM: ");
     Serial.println(bpm);
 
-    // 🔹 Send Simulated Data to Firebase
+   
     Firebase.setFloat(fbdo, "/PulseOximeter/SpO2", spo2);
     Firebase.setFloat(fbdo, "/PulseOximeter/BPM", bpm);
-    Serial.println("✅ Simulated Data Sent to Firebase");
+    Serial.println(" Simulated Data Sent to Firebase");
 
-    delay(2000); // Wait 2 seconds before sending data again
+    delay(2000);
 }
